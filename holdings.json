@@ -1,52 +1,52 @@
 {
   "BSE.NS": {
-    "shares": 2600,
-    "avg_price": 3989.23,
-    "first_buy_date": null
+    "shares": 25000,
+    "avg_price": 3929.5,
+    "first_buy_date": "2026-06-11"
   },
   "ANGELONE.NS": {
     "shares": 10000,
     "avg_price": 325.15,
-    "first_buy_date": null
+    "first_buy_date": "2026-06-11"
   },
   "JAINREC.NS": {
     "shares": 10001,
     "avg_price": 317.75,
-    "first_buy_date": null
+    "first_buy_date": "2026-06-12"
   },
   "KRISHNADEF.NS": {
     "shares": 2200,
     "avg_price": 1213.24,
-    "first_buy_date": null
+    "first_buy_date": "2026-06-12"
   },
   "KPITTECH.NS": {
     "shares": 14000,
     "avg_price": 754.1,
-    "first_buy_date": null
+    "first_buy_date": "2026-06-12"
   },
   "MAZDOCK.NS": {
-    "shares": 1000,
-    "avg_price": 2445.9,
-    "first_buy_date": null
+    "shares": 3000,
+    "avg_price": 2488.7,
+    "first_buy_date": "2026-06-15"
   },
   "HAL.NS": {
     "shares": 1000,
     "avg_price": 4212.2,
-    "first_buy_date": null
+    "first_buy_date": "2026-06-15"
   },
   "GRSE.NS": {
     "shares": 1000,
     "avg_price": 2680.3,
-    "first_buy_date": null
+    "first_buy_date": "2026-06-15"
   },
-  "KEC.NS": {
-    "shares": 9000,
-    "avg_price": 521.36,
-    "first_buy_date": null
+  "NETWEB.NS": {
+    "shares": 5600,
+    "avg_price": 4915.1,
+    "first_buy_date": "2026-06-12"
   },
-  "5PAISA.NS": {
+  "THYROCARE.NS": {
     "shares": 20000,
-    "avg_price": 337.7,
-    "first_buy_date": null
+    "avg_price": 565.2,
+    "first_buy_date": "2026-06-24"
   }
 }
