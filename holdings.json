@@ -5,8 +5,8 @@
     "first_buy_date": "2026-06-11"
   },
   "ANGELONE.NS": {
-    "shares": 10000,
-    "avg_price": 325.15,
+    "shares": 25000,
+    "avg_price": 327.72,
     "first_buy_date": "2026-06-11"
   },
   "JAINREC.NS": {
@@ -24,24 +24,9 @@
     "avg_price": 754.1,
     "first_buy_date": "2026-06-12"
   },
-  "MAZDOCK.NS": {
-    "shares": 3000,
-    "avg_price": 2488.7,
-    "first_buy_date": "2026-06-15"
-  },
-  "HAL.NS": {
-    "shares": 1000,
-    "avg_price": 4212.2,
-    "first_buy_date": "2026-06-15"
-  },
-  "GRSE.NS": {
-    "shares": 1000,
-    "avg_price": 2680.3,
-    "first_buy_date": "2026-06-15"
-  },
   "NETWEB.NS": {
-    "shares": 5600,
-    "avg_price": 4915.1,
+    "shares": 14300,
+    "avg_price": 4641.69,
     "first_buy_date": "2026-06-12"
   },
   "THYROCARE.NS": {
