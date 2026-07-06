@@ -1,7 +1,7 @@
 {
   "BSE.NS": {
-    "shares": 25000,
-    "avg_price": 3929.5,
+    "shares": 35000,
+    "avg_price": 3876.76,
     "first_buy_date": "2026-06-11"
   },
   "ANGELONE.NS": {
@@ -24,24 +24,9 @@
     "avg_price": 754.1,
     "first_buy_date": "2026-06-12"
   },
-  "MAZDOCK.NS": {
-    "shares": 3000,
-    "avg_price": 2488.7,
-    "first_buy_date": "2026-06-15"
-  },
-  "HAL.NS": {
-    "shares": 1000,
-    "avg_price": 4212.2,
-    "first_buy_date": "2026-06-15"
-  },
-  "GRSE.NS": {
-    "shares": 1000,
-    "avg_price": 2680.3,
-    "first_buy_date": "2026-06-15"
-  },
   "NETWEB.NS": {
-    "shares": 5600,
-    "avg_price": 4915.1,
+    "shares": 10600,
+    "avg_price": 4648.45,
     "first_buy_date": "2026-06-12"
   },
   "THYROCARE.NS": {
