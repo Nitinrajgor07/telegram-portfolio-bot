@@ -1,7 +1,7 @@
 {
   "BSE.NS": {
-    "shares": 46500,
-    "avg_price": 3821.71,
+    "shares": 52500,
+    "avg_price": 3802.47,
     "first_buy_date": "2026-06-11"
   },
   "ANGELONE.NS": {
@@ -25,13 +25,13 @@
     "first_buy_date": "2026-06-12"
   },
   "NETWEB.NS": {
-    "shares": 33500,
-    "avg_price": 4441.43,
+    "shares": 53500,
+    "avg_price": 4379.59,
     "first_buy_date": "2026-06-12"
   },
   "THYROCARE.NS": {
-    "shares": 20000,
-    "avg_price": 565.2,
+    "shares": 60000,
+    "avg_price": 547.9,
     "first_buy_date": "2026-06-24"
   }
 }
