@@ -1,7 +1,7 @@
 {
   "BSE.NS": {
-    "shares": 52500,
-    "avg_price": 3802.47,
+    "shares": 50000,
+    "avg_price": 3813.75,
     "first_buy_date": "2026-06-11"
   },
   "ANGELONE.NS": {
@@ -20,18 +20,18 @@
     "first_buy_date": "2026-06-12"
   },
   "KPITTECH.NS": {
-    "shares": 79000,
-    "avg_price": 592.81,
+    "shares": 30000,
+    "avg_price": 646.74,
     "first_buy_date": "2026-06-12"
   },
   "NETWEB.NS": {
-    "shares": 53500,
-    "avg_price": 4379.59,
+    "shares": 45600,
+    "avg_price": 4293.35,
     "first_buy_date": "2026-06-12"
   },
   "THYROCARE.NS": {
-    "shares": 60000,
-    "avg_price": 547.9,
+    "shares": 100000,
+    "avg_price": 526.51,
     "first_buy_date": "2026-06-24"
   }
 }
