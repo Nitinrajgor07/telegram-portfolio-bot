@@ -14,8 +14,9 @@ Live prices: yfinance se directly fetch hote hain, har request pe fresh.
 
 import os
 import json
+import hmac
 from datetime import datetime
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 import httpx
 import yfinance as yf
 import pytz
@@ -25,6 +26,13 @@ app = FastAPI()
 IST = pytz.timezone("Asia/Kolkata")
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
+
+# Secret token shared with Telegram via setWebhook's `secret_token` param.
+# Telegram echoes it back on every webhook call in the
+# `X-Telegram-Bot-Api-Secret-Token` header, so we can reject requests that
+# don't come from Telegram. Without this, anyone who learns the webhook URL
+# can drive the bot into sending messages to arbitrary chat_ids.
+WEBHOOK_SECRET = os.environ.get("TELEGRAM_WEBHOOK_SECRET", "")
 
 HOLDINGS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "holdings.json")
 
@@ -185,7 +193,20 @@ async def send_telegram_message(chat_id, text):
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
     """Telegram yahan POST karta hai jab koi message aata hai."""
-    data = await request.json()
+    # Authenticate the caller: only Telegram knows the secret token that we
+    # registered via setWebhook. Reject everything else.
+    if not WEBHOOK_SECRET:
+        return Response(status_code=503)
+    provided = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+    if not hmac.compare_digest(provided, WEBHOOK_SECRET):
+        return Response(status_code=403)
+
+    try:
+        data = await request.json()
+    except Exception:
+        return Response(status_code=400)
+    if not isinstance(data, dict):
+        return {"ok": True}
     message = data.get("message", {})
     text = message.get("text", "").strip()
     chat_id = message.get("chat", {}).get("id")
@@ -196,8 +217,8 @@ async def telegram_webhook(request: Request):
     if text in ("/portfolio", "/holdings", "/start"):
         try:
             reply = build_portfolio_message()
-        except Exception as e:
-            reply = f"⚠️ Error: {e}"
+        except Exception:
+            reply = "⚠️ Kuch gadbad ho gayi. Thodi der baad dobara try karo."
         await send_telegram_message(chat_id, reply)
     else:
         await send_telegram_message(
