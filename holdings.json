@@ -1,37 +1,37 @@
 {
-  "BSE.NS": {
-    "shares": 50000,
-    "avg_price": 3813.75,
-    "first_buy_date": "2026-06-11"
-  },
-  "ANGELONE.NS": {
-    "shares": 50000,
-    "avg_price": 327.39,
-    "first_buy_date": "2026-06-11"
-  },
-  "JAINREC.NS": {
-    "shares": 10001,
-    "avg_price": 317.75,
-    "first_buy_date": "2026-06-12"
-  },
-  "KRISHNADEF.NS": {
-    "shares": 2200,
-    "avg_price": 1213.24,
-    "first_buy_date": "2026-06-12"
-  },
-  "KPITTECH.NS": {
-    "shares": 50000,
-    "avg_price": 609.03,
-    "first_buy_date": "2026-06-12"
-  },
   "NETWEB.NS": {
     "shares": 65600,
-    "avg_price": 4264.5,
+    "avg_price": 4264.78,
     "first_buy_date": "2026-06-12"
   },
   "THYROCARE.NS": {
     "shares": 100000,
-    "avg_price": 526.51,
+    "avg_price": 526.55,
     "first_buy_date": "2026-06-24"
+  },
+  "ANGELONE.NS": {
+    "shares": 50000,
+    "avg_price": 327.45,
+    "first_buy_date": "2026-06-11"
+  },
+  "JAINREC.NS": {
+    "shares": 10000,
+    "avg_price": 317.55,
+    "first_buy_date": "2026-06-12"
+  },
+  "KRISHNADEF.NS": {
+    "shares": 2200,
+    "avg_price": 1212.96,
+    "first_buy_date": "2026-06-12"
+  },
+  "BSE.NS": {
+    "shares": 50000,
+    "avg_price": 3813.23,
+    "first_buy_date": "2026-06-11"
+  },
+  "KPITTECH.NS": {
+    "shares": 50000,
+    "avg_price": 609.11,
+    "first_buy_date": "2026-06-12"
   }
 }
