@@ -50,6 +50,8 @@ Telegram pe `/portfolio` bhejने par, aapकी holdings ka live snapshot rep
 5. **Environment Variables** section mein add karo:
    - Key: `TELEGRAM_BOT_TOKEN`
    - Value: woह token jo Step 1 mein mila (jaisे `123456789:ABCdef...`)
+   - Key: `TELEGRAM_WEBHOOK_SECRET`
+   - Value: ek apna random secret string (jaisे `openssl rand -hex 32` se banaya hua). Yeh Telegram request ko verify karta hai — iske bina bot 503 dega. Isko bhi safe rakho, kisi ko share na karo.
 6. **"Create Web Service"** click karो — Render automatically build aur deploy kar dega (2-3 minute lagенge)
 7. Deploy hone ke baad, aapको ek URL milegа jaisा:
    ```
@@ -59,16 +61,18 @@ Telegram pe `/portfolio` bhejने par, aapकी holdings ka live snapshot rep
 
 ## Step 5 — Telegram ko Webhook URL Batao
 
-Apने browser mein yeh URL kholो (apना bot token aur Render URL daal ke):
+Apने browser mein yeh URL kholो (apना bot token, Render URL, aur wahi `TELEGRAM_WEBHOOK_SECRET` daal ke jo Step 4 mein set kiya):
 
 ```
-https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook?url=<YOUR_RENDER_URL>/webhook
+https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook?url=<YOUR_RENDER_URL>/webhook&secret_token=<YOUR_TELEGRAM_WEBHOOK_SECRET>
 ```
 
 Example:
 ```
-https://api.telegram.org/bot123456789:ABCdefGHI/setWebhook?url=https://portfolio-bot-xxxx.onrender.com/webhook
+https://api.telegram.org/bot123456789:ABCdefGHI/setWebhook?url=https://portfolio-bot-xxxx.onrender.com/webhook&secret_token=abcd1234...
 ```
+
+> `secret_token` zaroori hai — Telegram isko har webhook request ke saath `X-Telegram-Bot-Api-Secret-Token` header mein bhejta hai, aur bot use verify karta hai. Iske bina koi bhi aapke webhook URL pe request bhej ke bot se messages trigger kar sakta hai.
 
 Agar successful hua, browser mein dikhegа:
 ```json
