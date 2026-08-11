@@ -1,22 +1,17 @@
 {
-  "NETWEB.NS": {
-    "shares": 65600,
-    "avg_price": 4264.78,
-    "first_buy_date": "2026-06-12"
-  },
   "THYROCARE.NS": {
     "shares": 100000,
     "avg_price": 526.55,
     "first_buy_date": "2026-06-24"
   },
   "ANGELONE.NS": {
-    "shares": 50000,
-    "avg_price": 327.45,
+    "shares": 150000,
+    "avg_price": 304.98,
     "first_buy_date": "2026-06-11"
   },
   "JAINREC.NS": {
-    "shares": 10000,
-    "avg_price": 317.55,
+    "shares": 110000,
+    "avg_price": 297.96,
     "first_buy_date": "2026-06-12"
   },
   "KRISHNADEF.NS": {
