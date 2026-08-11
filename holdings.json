@@ -15,18 +15,13 @@
     "first_buy_date": "2026-06-12"
   },
   "KRISHNADEF.NS": {
-    "shares": 100200,
-    "avg_price": 1276.02,
+    "shares": 200200,
+    "avg_price": 1225.56,
     "first_buy_date": "2026-06-12"
   },
   "BSE.NS": {
-    "shares": 70000,
-    "avg_price": 3758.68,
+    "shares": 100000,
+    "avg_price": 3715.07,
     "first_buy_date": "2026-06-11"
-  },
-  "KPITTECH.NS": {
-    "shares": 60000,
-    "avg_price": 601.16,
-    "first_buy_date": "2026-06-12"
   }
 }
