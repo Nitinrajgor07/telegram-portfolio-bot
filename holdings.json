@@ -1,7 +1,7 @@
 {
   "ANGELONE.NS": {
-    "shares": 150000,
-    "avg_price": 304.98,
+    "shares": 220000,
+    "avg_price": 300.21,
     "first_buy_date": "2026-06-11"
   },
   "JAINREC.NS": {
@@ -10,13 +10,13 @@
     "first_buy_date": "2026-06-12"
   },
   "KRISHNADEF.NS": {
-    "shares": 325200,
-    "avg_price": 1178.53,
+    "shares": 425200,
+    "avg_price": 1145.13,
     "first_buy_date": "2026-06-12"
   },
   "BSE.NS": {
-    "shares": 100000,
-    "avg_price": 3715.07,
+    "shares": 140000,
+    "avg_price": 3581.63,
     "first_buy_date": "2026-06-11"
   }
 }
