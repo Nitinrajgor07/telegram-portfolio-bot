@@ -18,19 +18,15 @@ from datetime import datetime
 from fastapi import FastAPI, Request
 import httpx
 import yfinance as yf
-import pytz
+
+from utils import ist_now, sign_emoji, format_pct_cell, format_short_value
 
 app = FastAPI()
 
-IST = pytz.timezone("Asia/Kolkata")
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 HOLDINGS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "holdings.json")
-
-
-def ist_now():
-    return datetime.now(IST)
 
 
 def load_holdings():
@@ -124,8 +120,8 @@ def build_portfolio_message():
 
     total_pnl_pct = (total_pnl / total_inv * 100) if total_inv else 0
     total_day_pct = (total_day_pnl / prev_total_val * 100) if prev_total_val else 0
-    day_emoji = "🟢" if total_day_pnl >= 0 else "🔴"
-    tot_emoji = "📈" if total_pnl >= 0 else "📉"
+    day_emoji = sign_emoji(total_day_pnl)
+    tot_emoji = sign_emoji(total_pnl, up="📈", down="📉")
 
     lines = []
     # ── Header ──────────────────────────────────────────────────────────────
@@ -148,16 +144,12 @@ def build_portfolio_message():
     table_lines.append(f"{'STOCK':<10}{'DAY%':>8}{'TOTAL%':>9}{'VALUE':>10}")
     table_lines.append("─" * 37)
     for r in rows:
-        day_sign = "+" if r["day_pct"] >= 0 else ""
-        tot_sign = "+" if r["pnl_pct"] >= 0 else ""
-        day_mark = "▲" if r["day_pct"] >= 0 else "▼"
-        tot_mark = "▲" if r["pnl_pct"] >= 0 else "▼"
         name_short = r["name"][:9]
-        val_str = f"{r['cur_v']/100000:,.1f}L" if r["cur_v"] >= 100000 else f"{r['cur_v']:,.0f}"
+        val_str = format_short_value(r["cur_v"])
         table_lines.append(
             f"{name_short:<10}" +
-            (f"{day_mark}{day_sign}{r['day_pct']:.1f}%").rjust(8) +
-            (f"{tot_mark}{tot_sign}{r['pnl_pct']:.1f}%").rjust(9) +
+            format_pct_cell(r["day_pct"], 8) +
+            format_pct_cell(r["pnl_pct"], 9) +
             f"{val_str}".rjust(10)
         )
     lines.append("<pre>" + "\n".join(table_lines) + "</pre>")
