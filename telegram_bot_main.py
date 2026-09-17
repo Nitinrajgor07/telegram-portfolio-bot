@@ -14,11 +14,18 @@ Live prices: yfinance se directly fetch hote hain, har request pe fresh.
 
 import os
 import json
+import logging
 from datetime import datetime
 from fastapi import FastAPI, Request
 import httpx
 import yfinance as yf
 import pytz
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger("telegram_portfolio_bot")
 
 app = FastAPI()
 
@@ -34,28 +41,44 @@ def ist_now():
 
 
 def load_holdings():
-    """holdings.json se holdings padho — format: { ticker: {shares, avg_price, first_buy_date} }"""
+    """holdings.json se holdings padho — format: { ticker: {shares, avg_price, first_buy_date} }
+
+    File missing hona ek valid "abhi tak sync nahi hua" state hai, isliye {} return
+    hota hai. Lekin corrupt/invalid JSON ek real error hai — usse silently {} return
+    karna "koi holdings nahi mili" jaisा galat message dikha deta hai, isliye woh
+    propagate hota hai taaki caller usse surface kar sake.
+    """
     try:
         with open(HOLDINGS_FILE, "r") as f:
             return json.load(f)
-    except Exception:
+    except FileNotFoundError:
+        logger.warning("holdings file not found at %s; treating as empty", HOLDINGS_FILE)
         return {}
+    except (json.JSONDecodeError, OSError) as e:
+        logger.error("failed to read holdings file %s: %s", HOLDINGS_FILE, e)
+        raise RuntimeError(f"holdings.json padhne mein dikkat: {e}") from e
 
 
 def get_live_price(ticker):
-    """yfinance se current price + previous close fetch karo, fail hone par None."""
+    """yfinance se current price + previous close fetch karo, fail hone par None.
+
+    Dono attempts fail hone par (None, None) return hota hai, lekin ab exceptions
+    silently swallow nahi hoti — log hoti hain taaki price-fetch failures debug ho sakें.
+    """
     try:
         info = yf.Ticker(ticker).fast_info
         cur = float(info.last_price)
         prev = float(info.previous_close)
         return cur, prev
-    except Exception:
+    except Exception as e:
+        logger.warning("fast_info price fetch failed for %s: %s; trying history fallback", ticker, e)
         try:
             hist = yf.Ticker(ticker).history(period="5d", interval="1d").dropna(subset=["Close"])
             if len(hist) >= 2:
                 return float(hist["Close"].iloc[-1]), float(hist["Close"].iloc[-2])
-        except Exception:
-            pass
+            logger.warning("history fallback for %s returned insufficient data (%d rows)", ticker, len(hist))
+        except Exception as e2:
+            logger.warning("history fallback price fetch failed for %s: %s", ticker, e2)
     return None, None
 
 
@@ -72,6 +95,7 @@ def build_portfolio_message():
 
     today = ist_now().date()
     rows = []
+    stale_tickers = []
     total_cur = 0.0
     total_inv = 0.0
     total_day_pnl = 0.0
@@ -86,6 +110,10 @@ def build_portfolio_message():
 
         cur_p, prev_p = get_live_price(ticker)
         if cur_p is None:
+            # Live price nahi mila — avg_price pe fall back karte hain taaki row
+            # dikhe, par isse P&L 0 dikhta hai jo galat/stale hai, isliye ticker ko
+            # track karke user ko neeche note dikhate hain (silently hide nahi karte).
+            stale_tickers.append(ticker.replace(".NS", ""))
             cur_p = avg_price
             prev_p = avg_price
 
@@ -104,8 +132,8 @@ def build_portfolio_message():
                 fb_date = datetime.strptime(fb_date_str, "%Y-%m-%d").date()
                 held_days = (today - fb_date).days
                 term_label = "LT" if held_days > 365 else "ST"
-            except Exception:
-                pass
+            except ValueError as e:
+                logger.warning("invalid first_buy_date %r for %s: %s", fb_date_str, ticker, e)
 
         name = ticker.replace(".NS", "")
         rows.append({
@@ -171,24 +199,61 @@ def build_portfolio_message():
         if worst["day_pct"] < 0:
             lines.append(f"⚠️ Worst today: <b>{worst['name']}</b> ({worst['day_pct']:+.2f}%)")
 
+    # ── Stale-price warning — live price fetch fail hui in tickers ke liye ─────
+    if stale_tickers:
+        lines.append("")
+        lines.append(
+            "⚠️ <i>Live price nahi mila (avg cost pe dikha rahe hain): "
+            + ", ".join(stale_tickers)
+            + "</i>"
+        )
+
     return "\n".join(lines)
 
 
 async def send_telegram_message(chat_id, text):
-    async with httpx.AsyncClient() as client:
-        await client.post(
+    """Telegram sendMessage API call karo.
+
+    Pehle yeh response ko poori tarah ignore karta tha — HTTP timeout, network
+    error, ya Telegram ka non-2xx (jaisे invalid HTML parse) sab silently chale
+    jaate the. Ab timeout set hai, response status check hota hai, aur error par
+    exception raise hoti hai taaki caller usse handle/log kar sake.
+    """
+    if not BOT_TOKEN:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN set nahi hai — message send nahi ho sakta.")
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        resp = await client.post(
             f"{TELEGRAM_API}/sendMessage",
             json={"chat_id": chat_id, "text": text, "parse_mode": "HTML"},
         )
+    if resp.status_code >= 400:
+        logger.error(
+            "telegram sendMessage failed for chat %s: HTTP %s %s",
+            chat_id, resp.status_code, resp.text,
+        )
+        resp.raise_for_status()
+    return resp
 
 
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
     """Telegram yahan POST karta hai jab koi message aata hai."""
-    data = await request.json()
-    message = data.get("message", {})
-    text = message.get("text", "").strip()
-    chat_id = message.get("chat", {}).get("id")
+    try:
+        data = await request.json()
+    except (json.JSONDecodeError, ValueError) as e:
+        # Malformed body — Telegram retry na kare isliye 200 return karte hain,
+        # par error swallow nahi karte: log hota hai.
+        logger.warning("received webhook with non-JSON body: %s", e)
+        return {"ok": False, "error": "invalid JSON body"}
+
+    if not isinstance(data, dict):
+        logger.warning("received webhook payload that is not an object: %r", type(data).__name__)
+        return {"ok": False, "error": "unexpected payload"}
+
+    message = data.get("message") or {}
+    text = (message.get("text") or "").strip()
+    chat_id = (message.get("chat") or {}).get("id")
 
     if not chat_id:
         return {"ok": True}
@@ -196,14 +261,19 @@ async def telegram_webhook(request: Request):
     if text in ("/portfolio", "/holdings", "/start"):
         try:
             reply = build_portfolio_message()
-        except Exception as e:
-            reply = f"⚠️ Error: {e}"
-        await send_telegram_message(chat_id, reply)
+        except Exception:
+            # Poora traceback log karte hain, par user ko raw internal error leak
+            # nahi karte — ek generic message dikhate hain.
+            logger.exception("failed to build portfolio message for chat %s", chat_id)
+            reply = "⚠️ Portfolio banate waqt error aa gaya. Thodi der baad phir try karo."
     else:
-        await send_telegram_message(
-            chat_id,
-            "Samajh nahi aaya. /portfolio bhejो current holdings dekhne ke liye."
-        )
+        reply = "Samajh nahi aaya. /portfolio bhejो current holdings dekhne ke liye."
+
+    try:
+        await send_telegram_message(chat_id, reply)
+    except Exception:
+        logger.exception("failed to send telegram message to chat %s", chat_id)
+        return {"ok": False, "error": "send failed"}
 
     return {"ok": True}
 
