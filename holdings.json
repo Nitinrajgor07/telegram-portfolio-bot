@@ -1,37 +1,47 @@
 {
   "ANGELONE.NS": {
-    "shares": 104000,
-    "avg_price": 312.7,
+    "shares": 704000,
+    "avg_price": 283.98,
     "first_buy_date": "2026-06-11"
   },
   "JAINREC.NS": {
-    "shares": 106000,
-    "avg_price": 297.9,
+    "shares": 1006000,
+    "avg_price": 290.12,
     "first_buy_date": "2026-06-12"
   },
   "KRISHNADEF.NS": {
-    "shares": 100200,
-    "avg_price": 1276.02,
+    "shares": 400200,
+    "avg_price": 1160.42,
     "first_buy_date": "2026-06-12"
   },
   "BSE.NS": {
-    "shares": 100000,
-    "avg_price": 3618.01,
+    "shares": 600000,
+    "avg_price": 3295.33,
     "first_buy_date": "2026-06-11"
   },
   "CARTRADE.NS": {
-    "shares": 52000,
-    "avg_price": 3027.1,
+    "shares": 462000,
+    "avg_price": 2843.58,
     "first_buy_date": "2026-09-09"
-  },
-  "MONEYVIEW.NS": {
-    "shares": 3400000,
-    "avg_price": 62.39,
-    "first_buy_date": "2026-10-11"
   },
   "CUPID.NS": {
     "shares": 500000,
-    "avg_price": 366.1,
-    "first_buy_date": "2026-10-11"
+    "avg_price": 306.45,
+    "first_buy_date": "2026-10-25"
+  },
+  "MONEYVIEW.NS": {
+    "shares": 1500000,
+    "avg_price": 51.87,
+    "first_buy_date": "2026-10-25"
+  },
+  "KANOHAR.NS": {
+    "shares": 500000,
+    "avg_price": 888.0,
+    "first_buy_date": "2026-10-25"
+  },
+  "NETWEB.NS": {
+    "shares": 200000,
+    "avg_price": 4180.0,
+    "first_buy_date": "2026-10-26"
   }
 }
