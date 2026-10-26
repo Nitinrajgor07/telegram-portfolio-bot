@@ -43,5 +43,10 @@
     "shares": 200000,
     "avg_price": 4180.0,
     "first_buy_date": "2026-10-26"
+  },
+  "TONBO.NS": {
+    "shares": 100000,
+    "avg_price": 1202.15,
+    "first_buy_date": "2026-10-26"
   }
 }
